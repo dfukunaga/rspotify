@@ -30,9 +30,16 @@ module RSpotify
       true
     end
 
+    def set_accept_language(accept_language)
+      @accept_language = accept_language
+    end
+
     VERBS.each do |verb|
       define_method verb do |path, *params|
-        params << { 'Authorization' => "Bearer #{@client_token}" } if @client_token
+        headers = {}
+        headers['Authorization'] = "Bearer #{@client_token}" if @client_token
+        headers['Accept-Language'] = @accept_language if @accept_language
+        params << headers
         send_request(verb, path, *params)
       end
     end
